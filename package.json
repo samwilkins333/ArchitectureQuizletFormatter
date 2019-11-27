@@ -1,21 +1,25 @@
 {
-  "name": "closure",
+  "name": "ArchitectureQuizletFormatter",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "dist/formatter.js",
+  "bin": {
+    "formatter": "./bin/formatter"
   },
+  "scripts": {
+    "make": "cd ./src && tsc && cd .. && npm pack && npm install ArchitectureQuizletFormatter-1.0.0.tgz -g" 
+  },
+  "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samwilkins333/Closure.git"
+    "url": "git+https://github.com/samwilkins333/ArchitectureQuizletFormatter.git"
   },
   "author": "Sam Wilkins <samwilkins333@gmail.com> (http://www.samwilkins.me)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/samwilkins333/Closure/issues"
+    "url": "https://github.com/samwilkins333/ArchitectureQuizletFormatter/issues"
   },
-  "homepage": "https://github.com/samwilkins333/Closure#readme",
+  "homepage": "https://github.com/samwilkins333/ArchitectureQuizletFormatter#readme",
   "dependencies": {
     "@types/rimraf": "^2.0.3",
     "rimraf": "^3.0.0"

@@ -20,23 +20,24 @@ const comparatorHelper = (date: DateRange | DateRange[]): number => {
     return Array.isArray(date) ? helper(date[0]) : helper(date);
 }
 
-const source = "./sources";
-const dist = "./dist";
+const input = "./input";
+const output = "./output";
 const dateComparator = ({ date: first }, { date: second }) => comparatorHelper(first) - comparatorHelper(second);
 
 let delimiter = ":"
+console.log(process.argv, __dirname);
 if (process.argv.length > 2) {
     delimiter = process.argv[2];
 }
 
 async function execute() {
-    if (!existsSync(source)) {
+    if (!existsSync(input)) {
         console.log("No source files provided! Process exiting...");
         process.exit(1);
     }
-    await clean(dist);
+    await clean(output);
     (await new Promise<String[]>((resolve, reject) => {
-        readdir(source, (err, files) => {
+        readdir(input, (err, files) => {
             if (err) {
                 return reject(err);
             }
@@ -47,12 +48,12 @@ async function execute() {
 
 async function processFile(file: string) {
     const sourceName = file.split('.')[0];
-    const output = `${dist}/${sourceName}`;
-    await clean(output);
+    const outputPrefix = `${output}/${sourceName}`;
+    await clean(outputPrefix);
     let buildings: string;
     try {
         buildings = await new Promise<string>((resolve, reject) => {
-            readFile(`${source}/${file}`, (err, data) => {
+            readFile(`${input}/${file}`, (err, data) => {
                 if (err) {
                     return reject(err);
                 }
@@ -111,7 +112,7 @@ async function processFile(file: string) {
     ];
     await Promise.all(files.map(({ filename, lines }) => 
         new Promise<void>((resolve, reject) => {
-            writeFile(`${output}/${sourceName}_${filename}`, lines.join('\n'), err => {
+            writeFile(`${outputPrefix}/${sourceName}_${filename}`, lines.join('\n'), err => {
                 if (err !== null) {
                     reject(err);
                 } else {
