@@ -11,18 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const rimraf = require("rimraf");
-const comparatorHelper = (date) => {
+const path_1 = require("path");
+function dateComparator({ date: first }, { date: second }) {
+    return comparatorHelper(first) - comparatorHelper(second);
+}
+function comparatorHelper(date) {
     const helper = (date) => typeof date === "number" ? date : date.start;
     return Array.isArray(date) ? helper(date[0]) : helper(date);
-};
-const input = "./input";
-const output = "./output";
-const dateComparator = ({ date: first }, { date: second }) => comparatorHelper(first) - comparatorHelper(second);
-let delimiter = ":";
-console.log(process.argv, __dirname);
-if (process.argv.length > 2) {
-    delimiter = process.argv[2];
 }
+const delimiter = ":";
+if (process.argv.length != 3) {
+    console.log("Program requires exactly one argument specifying path/to/source/files. Process exiting...");
+    process.exit(1);
+}
+const input = process.argv[2];
+const output = path_1.resolve(input, "../output");
 function execute() {
     return __awaiter(this, void 0, void 0, function* () {
         if (!fs_1.existsSync(input)) {

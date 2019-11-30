@@ -1,5 +1,6 @@
 import { readFile, writeFile, readdir, existsSync, mkdirSync } from 'fs';
 import * as rimraf from 'rimraf';
+import { resolve } from 'path';
 
 type DateRange = number | { start: number, end: number };
 
@@ -15,20 +16,23 @@ interface FileTemplate {
     filename: string;
 }
 
-const comparatorHelper = (date: DateRange | DateRange[]): number => {
+function dateComparator({ date: first }, { date: second }) {
+    return comparatorHelper(first) - comparatorHelper(second);
+}
+
+function comparatorHelper(date: DateRange | DateRange[]): number {
     const helper = (date: DateRange) => typeof date === "number" ? date : date.start;
     return Array.isArray(date) ? helper(date[0]) : helper(date);
 }
 
-const input = "./input";
-const output = "./output";
-const dateComparator = ({ date: first }, { date: second }) => comparatorHelper(first) - comparatorHelper(second);
-
-let delimiter = ":"
-console.log(process.argv, __dirname);
-if (process.argv.length > 2) {
-    delimiter = process.argv[2];
+const delimiter = ":"
+if (process.argv.length != 3) {
+    console.log("Program requires exactly one argument specifying path/to/source/files. Process exiting...");
+    process.exit(1);
 }
+
+const input = process.argv[2];
+const output = resolve(input, "../output");
 
 async function execute() {
     if (!existsSync(input)) {
